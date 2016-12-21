@@ -25,7 +25,7 @@ void setup(){
   size(480, 480);
   noSmooth();
   
-  cube = new Cube(new Position(0,6,0),2);
+  cube = new Cube(new Position(6,0,0),2);
   
 /*  wires[1] = new Wire(5,1,-1,5,-1,-1); //old cube
   wires[2] = new Wire(5,1,1,5,1,-1);
@@ -46,16 +46,16 @@ void draw(){
   
   if(mousePressed){
     rotationZ+=(pmouseX-mouseX)*4*fov/screenX;
-  
+    
   }
   
   if(keyPressed){
     switch(key){
-   /* case  'w': camPosition.move(speed*cos(direction), speed*sin(direction),0); break;//print(direction);
-    case  's': camPosition.move(-speed*cos(direction), -speed*sin(direction),0); break;
-    case  'a': camPosition.move(-speed*sin(direction), speed*cos(direction),0); break;
-    case  'd': camPosition.move(speed*sin(direction), -speed*cos(direction),0); break;
-    case  'q': camPosition.moveTo(0,0,0);direction=0;*/
+    case  'w': camPosition.move(speed*cos(rotationZ), speed*sin(rotationZ),0); break;//print(rotationZ);
+    case  's': camPosition.move(-speed*cos(rotationZ), -speed*sin(rotationZ),0); break;
+    case  'a': camPosition.move(-speed*sin(rotationZ), speed*cos(rotationZ),0); break;
+    case  'd': camPosition.move(speed*sin(rotationZ), -speed*cos(rotationZ),0); break;
+    case  'q': camPosition.moveTo(0,0,0);rotationZ=0;
     }
     print(" x:"+camPosition.x+ " y: "+ camPosition.y+ " z: "+camPosition.z + "\n");
   }
@@ -97,10 +97,9 @@ Position toCamCoords(Position pos){
   float ry=rPos.y;
   float rz=rPos.z;
   
-  rPos.x = rx*cos(-rotationZ)-ry*sin(-rotationZ);
-  rPos.y = rx*sin(-rotationZ)+ry*cos(-rotationZ);
-  
-
+  rPos.x = rx+rx*cos(rotationZ)-ry*sin(rotationZ)+rx*cos(rotationY)+rz*sin(rotationY);
+  rPos.y = ry+rx*sin(rotationZ)+ry*cos(rotationZ)+ry*cos(rotationX)-rz*sin(rotationX);
+  rPos.z = rz+ry*sin(rotationX)+rz*cos(rotationX)+rz*cos(rotationY)-rx*sin(rotationY);
   return rPos;
 }
 
