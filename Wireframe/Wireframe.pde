@@ -9,11 +9,13 @@ float speed = 0.1;
 
 Position[] points = new Position[1];
 
-Wire[] wires = new Wire[12];
+Wire[] wires = new Wire[4];
 
 float mouseBeginX;
 float mouseBeginY;
 float startDirection;
+
+Cube cube;
 
 void setup(){
   camPosition = new Position(0, 0, 0);
@@ -21,8 +23,9 @@ void setup(){
   size(480, 480);
   noSmooth();
   
-  wires[0] = new Wire(5,1,1,5,-1,1);
-  wires[1] = new Wire(5,1,-1,5,-1,-1);
+  cube = new Cube(new Position(6,0,0),2);
+  
+/*  wires[1] = new Wire(5,1,-1,5,-1,-1);
   wires[2] = new Wire(5,1,1,5,1,-1);
   wires[3] = new Wire(5,-1,1,5,-1,-1);
   wires[4] = new Wire(7,1,1,7,1,-1);
@@ -32,7 +35,7 @@ void setup(){
   wires[8] = new Wire(5,1,1,7,1,1);
   wires[9] = new Wire(5,1,-1,7,1,-1);
   wires[10] = new Wire(5,-1,-1,7,-1,-1);
-  wires[11] = new Wire(5,-1,1,7,-1,1);
+  wires[11] = new Wire(5,-1,1,7,-1,1*/
 }
 
 
@@ -59,14 +62,15 @@ void draw(){
   
   for(int i = 0; i<points.length; i++){
     Position drawPos = pointOnCanvas(toCamCoords(points[i]));
-    point(drawPos.x, drawPos.y);
+      point(drawPos.x, drawPos.y);
   }
   
-  for(int i = 0; i<wires.length; i++){
-    Position drawPosStart = pointOnCanvas(toCamCoords(wires[i].start));  
-    Position drawPosEnd = pointOnCanvas(toCamCoords(wires[i].end));
+  for(int i = 0; i<cube.wires.length; i++){
+    Position drawPosStart = pointOnCanvas(toCamCoords(cube.wires[i].start));  
+    Position drawPosEnd = pointOnCanvas(toCamCoords(cube.wires[i].end));
     line(drawPosStart.x, drawPosStart.y, drawPosEnd.x, drawPosEnd.y);
   }
+  
 }
 
 void mousePressed(){
@@ -84,6 +88,19 @@ Position toCamCoords(Position pos){
   return rPos;
 }
 
-Position pointOnCanvas(Position pos){ //z coordinate to describe the point size or something(total distance)[not yet implemented]... or just zero
-  return new Position(screenX/2+atan(pos.y/pos.x)*screenX/fov, screenY/2-atan(pos.z/pos.x)*screenX/fov, 0);
+Position pointOnCanvas(Position pos){//z coordinate to describe the point size or something(total distance)[not yet implemented]... or just zero
+    return new Position(screenX/2+arctan(pos.x, pos.y)*screenX/fov, screenY/2-arctan(pos.x, pos.z)*screenX/fov, 0);
+}
+
+float arctan(float x, float y){ //helper to get rid of ghostlines of objects behind you
+  if(x>0)  
+    return atan(y/x);
+  else if(y>0)
+    return PI/2-atan(x/y);
+  else if(y<0)
+    return -PI/2-atan(x/y);  
+  else if(y>0)
+    return PI+atan(y/x);
+  else 
+    return 0; 
 }

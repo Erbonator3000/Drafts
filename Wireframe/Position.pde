@@ -25,6 +25,10 @@ void move(Position pos){
   z+=pos.z;
 }
 
+Position moved(float dx, float dy, float dz){
+  return new Position(x+dx, y+dy, z+dz);
+}
+
 void moveTo(float dx, float dy, float dz){
   x=dx;
   y=dy;
