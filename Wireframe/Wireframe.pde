@@ -3,7 +3,7 @@ final static int screenX = 480;
 final static int screenY = 480;
 
 Position camPosition;
-float direction = PI/16; //first just turnig with z-axis
+float direction = PI/2; //first just turnig with z-axis
 float fov = 3*PI/8;
 float speed = 0.1;
 
@@ -23,9 +23,9 @@ void setup(){
   size(480, 480);
   noSmooth();
   
-  cube = new Cube(new Position(6,0,0),2);
+  cube = new Cube(new Position(0,6,0),2);
   
-/*  wires[1] = new Wire(5,1,-1,5,-1,-1);
+/*  wires[1] = new Wire(5,1,-1,5,-1,-1); //old cube
   wires[2] = new Wire(5,1,1,5,1,-1);
   wires[3] = new Wire(5,-1,1,5,-1,-1);
   wires[4] = new Wire(7,1,1,7,1,-1);
@@ -43,17 +43,18 @@ void setup(){
 void draw(){
   
   if(mousePressed){
-    direction=startDirection+(mouseX-mouseBeginX)*fov/screenX;
+    direction=startDirection-(mouseX-mouseBeginX)*4*fov/screenX;
   }
   
   if(keyPressed){
     switch(key){
     case  'w': camPosition.move(speed*cos(direction), speed*sin(direction),0); break;//print(direction);
     case  's': camPosition.move(-speed*cos(direction), -speed*sin(direction),0); break;
-    case  'a': camPosition.move(speed*cos(direction+PI/2), speed*sin(direction+PI/2),0);print(camPosition.y); break;
-    case  'd': camPosition.move(speed*cos(direction-PI/2), speed*sin(direction-PI/2),0); break;
+    case  'a': camPosition.move(-speed*sin(direction), speed*cos(direction),0); break;
+    case  'd': camPosition.move(speed*sin(direction), -speed*cos(direction),0); break;
     case  'q': camPosition.moveTo(0,0,0);direction=0;
     }
+    print(" x:"+camPosition.x+ " y: "+ camPosition.y+ " z: "+camPosition.z + "\n");
   }
   while(direction>=2*PI) direction-=2*PI;
   while(direction<0) direction+=2*PI;
@@ -82,14 +83,17 @@ void mousePressed(){
 Position toCamCoords(Position pos){
   Position rPos = pos.relativeTo(camPosition);
   //calculating rotation
-  rPos.x = rPos.x*cos(direction)-rPos.y*sin(direction);
-  rPos.y = rPos.x*sin(direction)+rPos.y*cos(direction);
+  float rx=rPos.x;
+  float ry=rPos.y;
+  
+  rPos.x = rx*cos(-direction)-ry*sin(-direction);
+  rPos.y = rx*sin(-direction)+ry*cos(-direction);
 
   return rPos;
 }
 
 Position pointOnCanvas(Position pos){//z coordinate to describe the point size or something(total distance)[not yet implemented]... or just zero
-    return new Position(screenX/2+arctan(pos.x, pos.y)*screenX/fov, screenY/2-arctan(pos.x, pos.z)*screenX/fov, 0);
+    return new Position(screenX/2-arctan(pos.x, pos.y)*screenX/fov, screenY/2-arctan(pos.x, pos.z)*screenX/fov, 0);
 }
 
 float arctan(float x, float y){ //helper to get rid of ghostlines of objects behind you
@@ -99,7 +103,7 @@ float arctan(float x, float y){ //helper to get rid of ghostlines of objects beh
     return PI/2-atan(x/y);
   else if(y<0)
     return -PI/2-atan(x/y);  
-  else if(y>0)
+  else if(x<0)
     return PI+atan(y/x);
   else 
     return 0; 
