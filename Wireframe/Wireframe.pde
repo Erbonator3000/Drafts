@@ -4,6 +4,7 @@ final static int screenY = 480;
 
 Position camPosition;
 float direction = PI/2; //first just turnig with z-axis
+float tilt = 0;
 float fov = 3*PI/8;
 float speed = 0.1;
 
@@ -14,6 +15,7 @@ Wire[] wires = new Wire[4];
 float mouseBeginX;
 float mouseBeginY;
 float startDirection;
+float startTilt;
 
 Cube cube;
 
@@ -43,7 +45,8 @@ void setup(){
 void draw(){
   
   if(mousePressed){
-    direction=startDirection-(mouseX-mouseBeginX)*4*fov/screenX;
+    direction = startDirection-(mouseX-mouseBeginX)*4*fov/screenX;
+    tilt = startTilt-(mouseY-mouseBeginY)*4*fov/screenY;
   }
   
   if(keyPressed){
@@ -56,8 +59,13 @@ void draw(){
     }
     print(" x:"+camPosition.x+ " y: "+ camPosition.y+ " z: "+camPosition.z + "\n");
   }
+  
   while(direction>=2*PI) direction-=2*PI;
   while(direction<0) direction+=2*PI;
+  
+  if(tilt>=PI/2) tilt=PI/2;
+  while(tilt<-PI/2) tilt=-PI/2;  
+  
   background(0, 0, 0);
   stroke(255);
   
@@ -78,6 +86,7 @@ void mousePressed(){
   mouseBeginX=mouseX;
   mouseBeginY=mouseY;
   startDirection=direction;
+  startTilt=tilt;
 }
 
 Position toCamCoords(Position pos){
@@ -85,9 +94,11 @@ Position toCamCoords(Position pos){
   //calculating rotation
   float rx=rPos.x;
   float ry=rPos.y;
+  float rz=rPos.z;
   
   rPos.x = rx*cos(-direction)-ry*sin(-direction);
   rPos.y = rx*sin(-direction)+ry*cos(-direction);
+  
 
   return rPos;
 }
