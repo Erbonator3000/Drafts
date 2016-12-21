@@ -3,8 +3,11 @@ final static int screenX = 480;
 final static int screenY = 480;
 
 Position camPosition;
-float direction = PI/2; //first just turnig with z-axis
-float tilt = 0;
+
+float rotationX = 0;
+float rotationY = 0;
+float rotationZ = 0;
+
 float fov = 3*PI/8;
 float speed = 0.1;
 
@@ -12,10 +15,7 @@ Position[] points = new Position[1];
 
 Wire[] wires = new Wire[4];
 
-float mouseBeginX;
-float mouseBeginY;
-float startDirection;
-float startTilt;
+
 
 Cube cube;
 
@@ -45,26 +45,30 @@ void setup(){
 void draw(){
   
   if(mousePressed){
-    direction = startDirection-(mouseX-mouseBeginX)*4*fov/screenX;
-    tilt = startTilt-(mouseY-mouseBeginY)*4*fov/screenY;
+    rotationZ+=(pmouseX-mouseX)*4*fov/screenX;
+  
   }
   
   if(keyPressed){
     switch(key){
-    case  'w': camPosition.move(speed*cos(direction), speed*sin(direction),0); break;//print(direction);
+   /* case  'w': camPosition.move(speed*cos(direction), speed*sin(direction),0); break;//print(direction);
     case  's': camPosition.move(-speed*cos(direction), -speed*sin(direction),0); break;
     case  'a': camPosition.move(-speed*sin(direction), speed*cos(direction),0); break;
     case  'd': camPosition.move(speed*sin(direction), -speed*cos(direction),0); break;
-    case  'q': camPosition.moveTo(0,0,0);direction=0;
+    case  'q': camPosition.moveTo(0,0,0);direction=0;*/
     }
     print(" x:"+camPosition.x+ " y: "+ camPosition.y+ " z: "+camPosition.z + "\n");
   }
   
-  while(direction>=2*PI) direction-=2*PI;
-  while(direction<0) direction+=2*PI;
+  while(rotationX>=2*PI) rotationX-=2*PI;
+  while(rotationX<0) rotationX+=2*PI;
+
+  while(rotationY>=2*PI) rotationY-=2*PI;
+  while(rotationY<0) rotationY+=2*PI;  
   
-  if(tilt>=PI/2) tilt=PI/2;
-  while(tilt<-PI/2) tilt=-PI/2;  
+  while(rotationZ>=2*PI) rotationZ-=2*PI;
+  while(rotationZ<0) rotationZ+=2*PI;  
+  
   
   background(0, 0, 0);
   stroke(255);
@@ -83,10 +87,7 @@ void draw(){
 }
 
 void mousePressed(){
-  mouseBeginX=mouseX;
-  mouseBeginY=mouseY;
-  startDirection=direction;
-  startTilt=tilt;
+
 }
 
 Position toCamCoords(Position pos){
@@ -96,8 +97,8 @@ Position toCamCoords(Position pos){
   float ry=rPos.y;
   float rz=rPos.z;
   
-  rPos.x = rx*cos(-direction)-ry*sin(-direction);
-  rPos.y = rx*sin(-direction)+ry*cos(-direction);
+  rPos.x = rx*cos(-rotationZ)-ry*sin(-rotationZ);
+  rPos.y = rx*sin(-rotationZ)+ry*cos(-rotationZ);
   
 
   return rPos;
