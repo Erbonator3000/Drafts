@@ -19,6 +19,12 @@ void move(float dx, float dy, float dz){
   z+=dz;
 }
 
+void move(Position pos){
+  x+=pos.x;
+  y+=pos.y;
+  z+=pos.z;
+}
+
 void moveTo(float dx, float dy, float dz){
   x=dx;
   y=dy;
@@ -28,5 +34,6 @@ void moveTo(float dx, float dy, float dz){
 Position relativeTo(Position pos){
   return new Position(x-pos.x, y-pos.y, z-pos.z);
 }
+
 
 }
