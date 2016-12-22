@@ -22,12 +22,12 @@ Plane plane;
 
 void setup(){
   camPosition = new Position(0, 0, 0);
-  points[0] = new Position(1, 0, 0);
+  points[0] = new Position(1,0, 0);
   size(480, 480);
   noSmooth();
   
   cube = new Cube(new Position(6,0,0),2);
-  plane = new Plane(0,0,-3);
+  plane = new Plane(0,0,-1);
   
 /*  wires[1] = new Wire(5,1,-1,5,-1,-1); //old cube
   wires[2] = new Wire(5,1,1,5,1,-1);
@@ -92,11 +92,11 @@ void draw(){
     if(i!=0)
     line(drawPosStart.x, drawPosStart.y, drawPosEnd.x, drawPosEnd.y);
   }
-  /*for(int i = 0; i<plane.wires.length; i++){
+for(int i = 0; i<plane.wires.length; i++){
     Position drawPosStart = pointOnCanvas(toCamCoords(plane.wires[i].start));  
     Position drawPosEnd = pointOnCanvas(toCamCoords(plane.wires[i].end));
     line(drawPosStart.x, drawPosStart.y, drawPosEnd.x, drawPosEnd.y);
-  }*/
+} 
   
 }
 
@@ -135,11 +135,11 @@ Position pointOnCanvas(Position pos){//z coordinate to describe the point size o
 
 float arctan(float x, float y){ //helper to get rid of ghostlines of objects behind you
   if(x>0)  
-    return atan(y/x);
+    return atan(y/x)/cos(atan(y/x));
   else if(y>0)
     return PI/2-atan(x/y);
   else if(y<0)
-    return -PI/2-atan(x/y);  
+    return -PI/2-atan(x/y)+acos(y/x);  
   else if(x<0)
     return PI+atan(y/x);
   else 
