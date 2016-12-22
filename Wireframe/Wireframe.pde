@@ -18,6 +18,7 @@ Wire[] wires = new Wire[4];
 
 
 Cube cube;
+Plane plane;
 
 void setup(){
   camPosition = new Position(0, 0, 0);
@@ -26,6 +27,7 @@ void setup(){
   noSmooth();
   
   cube = new Cube(new Position(6,0,0),2);
+  plane = new Plane(0,0,-3);
   
 /*  wires[1] = new Wire(5,1,-1,5,-1,-1); //old cube
   wires[2] = new Wire(5,1,1,5,1,-1);
@@ -45,17 +47,23 @@ void setup(){
 void draw(){
   
   if(mousePressed){
-    rotationZ+=(pmouseX-mouseX)*4*fov/screenX;
+    rotationX+=(pmouseX-mouseX)*4*fov/screenX;
     
   }
   
   if(keyPressed){
     switch(key){
-    case  'w': camPosition.move(speed*cos(rotationZ), speed*sin(rotationZ),0); break;//print(rotationZ);
-    case  's': camPosition.move(-speed*cos(rotationZ), -speed*sin(rotationZ),0); break;
+    case  'w': camPosition.move(speed*cos(rotationZ)*cos(rotationY), speed*sin(rotationZ)*cos(rotationX),speed*sin(-rotationY)*cos(rotationX)); break;//print(rotationZ);
+    case  's': camPosition.move(-speed*cos(rotationZ)*cos(rotationY), -speed*sin(rotationZ)*cos(rotationX),-speed*sin(-rotationY)*cos(rotationX)); break;
     case  'a': camPosition.move(-speed*sin(rotationZ), speed*cos(rotationZ),0); break;
-    case  'd': camPosition.move(speed*sin(rotationZ), -speed*cos(rotationZ),0); break;
-    case  'q': camPosition.moveTo(0,0,0);rotationZ=0;
+    case  'd': camPosition.move(speed*sin(rotationZ), -speed*cos(rotationZ),0);break;
+    case  'u':rotationX+=speed; break;
+    case  'o':rotationX-=speed; break;
+    case  'i':rotationY+=speed; break;
+    case  'k':rotationY-=speed; break;
+    case  'j':rotationZ+=speed; break;
+    case  'l':rotationZ-=speed; break;
+    case  'q': camPosition.moveTo(0,0,0);rotationZ=0;rotationX=0;rotationY=0;
     }
     print(" x:"+camPosition.x+ " y: "+ camPosition.y+ " z: "+camPosition.z + "\n");
   }
@@ -81,8 +89,14 @@ void draw(){
   for(int i = 0; i<cube.wires.length; i++){
     Position drawPosStart = pointOnCanvas(toCamCoords(cube.wires[i].start));  
     Position drawPosEnd = pointOnCanvas(toCamCoords(cube.wires[i].end));
+    if(i!=0)
     line(drawPosStart.x, drawPosStart.y, drawPosEnd.x, drawPosEnd.y);
   }
+  /*for(int i = 0; i<plane.wires.length; i++){
+    Position drawPosStart = pointOnCanvas(toCamCoords(plane.wires[i].start));  
+    Position drawPosEnd = pointOnCanvas(toCamCoords(plane.wires[i].end));
+    line(drawPosStart.x, drawPosStart.y, drawPosEnd.x, drawPosEnd.y);
+  }*/
   
 }
 
@@ -97,9 +111,21 @@ Position toCamCoords(Position pos){
   float ry=rPos.y;
   float rz=rPos.z;
   
-  rPos.x = rx+rx*cos(rotationZ)-ry*sin(rotationZ)+rx*cos(rotationY)+rz*sin(rotationY);
-  rPos.y = ry+rx*sin(rotationZ)+ry*cos(rotationZ)+ry*cos(rotationX)-rz*sin(rotationX);
-  rPos.z = rz+ry*sin(rotationX)+rz*cos(rotationX)+rz*cos(rotationY)-rx*sin(rotationY);
+  //rotation x-axiz
+  
+ // rPos.x = rx+rx*cos(rotationZ)-ry*sin(rotationZ)+rx*cos(rotationY)+rz*sin(rotationY);
+  rPos.y = ry*cos(-rotationX)-rz*sin(-rotationX);
+  rPos.z = ry*sin(-rotationX)+rz*cos(-rotationX);//+rz*cos(rotationY)-rx*sin(rotationY);
+  //rotation y-axis
+  ry=rPos.y;
+  rz=rPos.z;
+  rPos.x=rx*cos(-rotationY)+rz*sin(-rotationY);
+  rPos.z=rz*cos(-rotationY)-rx*sin(-rotationY);
+  //rotation z-axis
+  rx=rPos.x;
+  ry=rPos.y;
+  rPos.x=rx*cos(-rotationZ)-ry*sin(-rotationZ);
+  rPos.y=rx*sin(-rotationZ)+ry*cos(-rotationZ);
   return rPos;
 }
 
