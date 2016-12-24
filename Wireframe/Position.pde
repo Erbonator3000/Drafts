@@ -39,5 +39,12 @@ Position relativeTo(Position pos){
   return new Position(x-pos.x, y-pos.y, z-pos.z);
 }
 
+float dot(Position pos){ //vector dot product
+  return x*pos.x+y*pos.y+x*pos.z;
+}
+
+float length(){
+return sqrt(pow(x,2)+pow(y,2)+pow(z,2));
+}
 
 }

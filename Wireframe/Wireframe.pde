@@ -53,16 +53,22 @@ void draw(){
   
   if(keyPressed){
     switch(key){
+      //camera movement
     case  'w': camPosition.move(speed*cos(rotationZ)*cos(rotationY), speed*sin(rotationZ)*cos(rotationX),speed*sin(-rotationY)*cos(rotationX)); break;//print(rotationZ);
     case  's': camPosition.move(-speed*cos(rotationZ)*cos(rotationY), -speed*sin(rotationZ)*cos(rotationX),-speed*sin(-rotationY)*cos(rotationX)); break;
-    case  'a': camPosition.move(-speed*sin(rotationZ), speed*cos(rotationZ),0); break;
-    case  'd': camPosition.move(speed*sin(rotationZ), -speed*cos(rotationZ),0);break;
+    case  'a': camPosition.move(-speed*sin(rotationZ)*cos(rotationY), speed*cos(rotationZ)*cos(rotationX),speed*cos(rotationY)*sin(rotationX)); break;
+    case  'd': camPosition.move(speed*sin(rotationZ)*cos(rotationY), -speed*cos(rotationZ)*cos(rotationX),-speed*cos(rotationY)*sin(rotationX));break;
+    case  'f': camPosition.move(speed*sin(rotationY)*cos(rotationZ),speed*sin(-rotationX)*cos(rotationZ), speed*cos(rotationX)*cos(rotationY)); break;
+    case  'v': camPosition.move(-speed*sin(rotationY)*cos(rotationZ), -speed*sin(-rotationX)*cos(rotationZ), -speed*cos(rotationX)*cos(rotationY)); break;
+      //camera rotation
     case  'u':rotationX+=speed; break;
     case  'o':rotationX-=speed; break;
     case  'i':rotationY+=speed; break;
     case  'k':rotationY-=speed; break;
     case  'j':rotationZ+=speed; break;
     case  'l':rotationZ-=speed; break;
+    //world rotation?
+    //reset
     case  'q': camPosition.moveTo(0,0,0);rotationZ=0;rotationX=0;rotationY=0;
     }
     print(" x:"+camPosition.x+ " y: "+ camPosition.y+ " z: "+camPosition.z + "\n");
@@ -100,9 +106,20 @@ for(int i = 0; i<plane.wires.length; i++){
   
 }
 
-void mousePressed(){
+
+void camRotation(float rx, float ry, float rz){
+Position direction = new Position(cos(rotationZ)*cos(rotationY), sin(rotationZ)*cos(rotationX),sin(-rotationY)*cos(rotationX)); //vector of camera x-axis
+//rotating aroun x-axis
+float Rz = acos(direction.x/direction.length());
+float Ry = acos(direction.z/direction.length());
+
+
+
 
 }
+
+
+
 
 Position toCamCoords(Position pos){
   Position rPos = pos.relativeTo(camPosition);
@@ -137,9 +154,11 @@ float arctan(float x, float y){ //helper to get rid of ghostlines of objects beh
   if(x>0)  
     return atan(y/x)/cos(atan(y/x));
   else if(y>0)
-    return PI/2-atan(x/y);
+    return PI/2+asin(y/sqrt(pow(x,2)+pow(y,2)));
   else if(y<0)
-    return -PI/2-atan(x/y)+acos(y/x);  
+    return -PI/2-atan(x/y); 
+  else if(x<0 && y==0)
+    return PI;
   else if(x<0)
     return PI+atan(y/x);
   else 
