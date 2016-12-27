@@ -53,13 +53,18 @@ void draw(){
   
   if(keyPressed){
     switch(key){
-      //camera movement
-    case  'w': camPosition.move(speed*cos(rotationZ)*cos(rotationY), speed*sin(rotationZ)*cos(rotationX),speed*sin(-rotationY)*cos(rotationX)); break;//print(rotationZ);
-    case  's': camPosition.move(-speed*cos(rotationZ)*cos(rotationY), -speed*sin(rotationZ)*cos(rotationX),-speed*sin(-rotationY)*cos(rotationX)); break;
-    case  'a': camPosition.move(-speed*sin(rotationZ)*cos(rotationY), speed*cos(rotationZ)*cos(rotationX),speed*cos(rotationY)*sin(rotationX)); break;
-    case  'd': camPosition.move(speed*sin(rotationZ)*cos(rotationY), -speed*cos(rotationZ)*cos(rotationX),-speed*cos(rotationY)*sin(rotationX));break;
-    case  'f': camPosition.move(speed*sin(rotationY)*cos(rotationZ),speed*sin(-rotationX)*cos(rotationZ), speed*cos(rotationX)*cos(rotationY)); break;
-    case  'v': camPosition.move(-speed*sin(rotationY)*cos(rotationZ), -speed*sin(-rotationX)*cos(rotationZ), -speed*cos(rotationX)*cos(rotationY)); break;
+      //walking
+    case  'w': camPosition.move(speed*cos(rotationZ), speed*sin(rotationZ),0); break;
+    case  's': camPosition.move(-speed*cos(rotationZ), -speed*sin(rotationZ),0); break;
+   case  'a': camPosition.move(-speed*sin(rotationZ), speed*cos(rotationZ),0); break;
+   case  'd': camPosition.move(speed*sin(rotationZ), -speed*cos(rotationZ),0); break;  
+      //free camera movement
+    case  't': camPosition.move(speed*cos(rotationZ)*cos(rotationY), speed*sin(rotationZ)*cos(rotationX),speed*sin(-rotationY)*cos(rotationX)); break;//print(rotationZ);
+    case  'g': camPosition.move(-speed*cos(rotationZ)*cos(rotationY), -speed*sin(rotationZ)*cos(rotationX),-speed*sin(-rotationY)*cos(rotationX)); break;
+    case  'f': camPosition.move(-speed*sin(rotationZ)*cos(rotationY), speed*cos(rotationZ)*cos(rotationX),speed*cos(rotationY)*sin(rotationX)); break;
+    case  'h': camPosition.move(speed*sin(rotationZ)*cos(rotationY), -speed*cos(rotationZ)*cos(rotationX),-speed*cos(rotationY)*sin(rotationX));break;
+    case  'b': camPosition.move(speed*sin(rotationY)*cos(rotationZ),speed*sin(-rotationX)*cos(rotationZ), speed*cos(rotationX)*cos(rotationY)); break;
+    case  'n': camPosition.move(-speed*sin(rotationY)*cos(rotationZ), -speed*sin(-rotationX)*cos(rotationZ), -speed*cos(rotationX)*cos(rotationY)); break;
       //camera rotation
     case  'u':rotationX+=speed; break;
     case  'o':rotationX-=speed; break;
@@ -76,9 +81,13 @@ void draw(){
   
   while(rotationX>=2*PI) rotationX-=2*PI;
   while(rotationX<0) rotationX+=2*PI;
-
-  while(rotationY>=2*PI) rotationY-=2*PI;
-  while(rotationY<0) rotationY+=2*PI;  
+  
+  //free rotation
+  //while(rotationY>=2*PI) rotationY-=2*PI;
+  //while(rotationY<0) rotationY+=2*PI;  
+  
+  if(rotationY>PI/2) rotationY=PI/2;
+  else if(rotationY<-PI/2) rotationY=-PI/2;
   
   while(rotationZ>=2*PI) rotationZ-=2*PI;
   while(rotationZ<0) rotationZ+=2*PI;  
@@ -128,21 +137,26 @@ Position toCamCoords(Position pos){
   float ry=rPos.y;
   float rz=rPos.z;
   
-  //rotation x-axiz
-  
- // rPos.x = rx+rx*cos(rotationZ)-ry*sin(rotationZ)+rx*cos(rotationY)+rz*sin(rotationY);
-  rPos.y = ry*cos(-rotationX)-rz*sin(-rotationX);
-  rPos.z = ry*sin(-rotationX)+rz*cos(-rotationX);//+rz*cos(rotationY)-rx*sin(rotationY);
-  //rotation y-axis
-  ry=rPos.y;
-  rz=rPos.z;
-  rPos.x=rx*cos(-rotationY)+rz*sin(-rotationY);
-  rPos.z=rz*cos(-rotationY)-rx*sin(-rotationY);
   //rotation z-axis
   rx=rPos.x;
   ry=rPos.y;
   rPos.x=rx*cos(-rotationZ)-ry*sin(-rotationZ);
   rPos.y=rx*sin(-rotationZ)+ry*cos(-rotationZ);
+  
+  //rotation y-axis
+  rx=rPos.x;
+  rz=rPos.z;
+  rPos.x=rx*cos(-rotationY)+rz*sin(-rotationY);
+  rPos.z=rz*cos(-rotationY)-rx*sin(-rotationY);
+  
+  //rotation x-axiz
+  ry=rPos.y;
+  rz=rPos.z;
+  rPos.y = ry*cos(-rotationX)-rz*sin(-rotationX);
+  rPos.z = ry*sin(-rotationX)+rz*cos(-rotationX);
+
+
+
   return rPos;
 }
 
