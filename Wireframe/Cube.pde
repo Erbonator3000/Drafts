@@ -1,6 +1,7 @@
-class Cube{
+class Cube extends Graphic{
+ 
   
-  Wire[] wires = new Wire[12];
+   Wire[] wires = new Wire[12];
   
 Cube(Position pos, float size){
   wires[0] = new Wire(pos.moved(size/2, size/2, size/2), pos.moved(-size/2, size/2, size/2));
@@ -17,6 +18,8 @@ Cube(Position pos, float size){
   wires[11] = new Wire(pos.moved(-size/2, size/2, size/2), pos.moved(-size/2, size/2, -size/2));
 }
 
-
+Wire[] getWires(){
+return wires;
+}
 
 }

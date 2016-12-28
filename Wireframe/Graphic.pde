@@ -1,4 +1,5 @@
 abstract class Graphic{
 
-  Wire[] wires;
+ abstract Wire[] getWires();
+  
 }

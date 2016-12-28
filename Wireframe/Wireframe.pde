@@ -15,7 +15,7 @@ Position[] points = new Position[1];
 
 Wire[] wires = new Wire[4];
 
-
+Graphic[] graphs;
 
 Cube cube;
 Plane plane;
@@ -29,17 +29,12 @@ void setup(){
   cube = new Cube(new Position(6,0,0),2);
   plane = new Plane(0,0,-1);
   
-/*  wires[1] = new Wire(5,1,-1,5,-1,-1); //old cube
-  wires[2] = new Wire(5,1,1,5,1,-1);
-  wires[3] = new Wire(5,-1,1,5,-1,-1);
-  wires[4] = new Wire(7,1,1,7,1,-1);
-  wires[5] = new Wire(7,1,-1,7,-1,-1);
-  wires[6] = new Wire(7,1,1,7,-1,1);
-  wires[7] = new Wire(7,-1,1,7,-1,-1);
-  wires[8] = new Wire(5,1,1,7,1,1);
-  wires[9] = new Wire(5,1,-1,7,1,-1);
-  wires[10] = new Wire(5,-1,-1,7,-1,-1);
-  wires[11] = new Wire(5,-1,1,7,-1,1*/
+  graphs = new Graphic[2];
+  graphs[0]=cube;
+  graphs[1]=plane;
+  
+  
+
 }
 
 
@@ -96,7 +91,18 @@ void draw(){
   background(0, 0, 0);
   stroke(255);
   
-  for(int i = 0; i<points.length; i++){
+  for(int i=0; i<graphs.length;i++){
+    wires=graphs[i].getWires();
+    for(int j=0; j<wires.length;j++){
+      Position drawPosStart = pointOnCanvas(toCamCoords(wires[j].start));  
+      Position drawPosEnd = pointOnCanvas(toCamCoords(wires[j].end));
+      line(drawPosStart.x, drawPosStart.y, drawPosEnd.x, drawPosEnd.y);
+    }
+  }
+  
+  
+  //old way of drawing stuff
+/*  for(int i = 0; i<points.length; i++){
     Position drawPos = pointOnCanvas(toCamCoords(points[i]));
       point(drawPos.x, drawPos.y);
   }
@@ -111,7 +117,7 @@ for(int i = 0; i<plane.wires.length; i++){
     Position drawPosStart = pointOnCanvas(toCamCoords(plane.wires[i].start));  
     Position drawPosEnd = pointOnCanvas(toCamCoords(plane.wires[i].end));
     line(drawPosStart.x, drawPosStart.y, drawPosEnd.x, drawPosEnd.y);
-} 
+} */
   
 }
 
