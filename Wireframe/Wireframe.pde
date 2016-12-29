@@ -14,20 +14,28 @@ float speed = 0.1;
 Position[] points = new Position[1];
 
 Wire[] wires = new Wire[4];
-
 Graphic[] graphs;
 
 Cube cube;
 Plane plane;
+TriangleMesh mesh;
+
+
+
+
 
 void setup(){
   camPosition = new Position(0, 0, 0);
   points[0] = new Position(1,0, 0);
   size(480, 480);
   noSmooth();
-  
+
   cube = new Cube(new Position(6,0,0),2);
   plane = new Plane(0,0,-1);
+  
+ // mesh = new TriangleMesh();
+  
+  
   
   graphs = new Graphic[2];
   graphs[0]=cube;
@@ -51,8 +59,8 @@ void draw(){
       //walking
     case  'w': camPosition.move(speed*cos(rotationZ), speed*sin(rotationZ),0); break;
     case  's': camPosition.move(-speed*cos(rotationZ), -speed*sin(rotationZ),0); break;
-   case  'a': camPosition.move(-speed*sin(rotationZ), speed*cos(rotationZ),0); break;
-   case  'd': camPosition.move(speed*sin(rotationZ), -speed*cos(rotationZ),0); break;  
+    case  'a': camPosition.move(-speed*sin(rotationZ), speed*cos(rotationZ),0); break;
+    case  'd': camPosition.move(speed*sin(rotationZ), -speed*cos(rotationZ),0); break;  
       //free camera movement
     case  't': camPosition.move(speed*cos(rotationZ)*cos(rotationY), speed*sin(rotationZ)*cos(rotationX),speed*sin(-rotationY)*cos(rotationX)); break;//print(rotationZ);
     case  'g': camPosition.move(-speed*cos(rotationZ)*cos(rotationY), -speed*sin(rotationZ)*cos(rotationX),-speed*sin(-rotationY)*cos(rotationX)); break;
@@ -94,31 +102,15 @@ void draw(){
   for(int i=0; i<graphs.length;i++){
     wires=graphs[i].getWires();
     for(int j=0; j<wires.length;j++){
-      Position drawPosStart = pointOnCanvas(toCamCoords(wires[j].start));  
-      Position drawPosEnd = pointOnCanvas(toCamCoords(wires[j].end));
-      line(drawPosStart.x, drawPosStart.y, drawPosEnd.x, drawPosEnd.y);
+      Position camPosStart = toCamCoords(wires[j].start);
+      Position camPosEnd = toCamCoords(wires[j].end);
+      if(camPosStart.x>0 && camPosEnd.x>0){ //some filtering to get rid of some ghost lines and for efficiency
+        Position drawPosStart = pointOnCanvas(camPosStart);  
+        Position drawPosEnd = pointOnCanvas(camPosEnd);
+        line(drawPosStart.x, drawPosStart.y, drawPosEnd.x, drawPosEnd.y);
+      }
     }
   }
-  
-  
-  //old way of drawing stuff
-/*  for(int i = 0; i<points.length; i++){
-    Position drawPos = pointOnCanvas(toCamCoords(points[i]));
-      point(drawPos.x, drawPos.y);
-  }
-  
-  for(int i = 0; i<cube.wires.length; i++){
-    Position drawPosStart = pointOnCanvas(toCamCoords(cube.wires[i].start));  
-    Position drawPosEnd = pointOnCanvas(toCamCoords(cube.wires[i].end));
-    if(i!=0)
-    line(drawPosStart.x, drawPosStart.y, drawPosEnd.x, drawPosEnd.y);
-  }
-for(int i = 0; i<plane.wires.length; i++){
-    Position drawPosStart = pointOnCanvas(toCamCoords(plane.wires[i].start));  
-    Position drawPosEnd = pointOnCanvas(toCamCoords(plane.wires[i].end));
-    line(drawPosStart.x, drawPosStart.y, drawPosEnd.x, drawPosEnd.y);
-} */
-  
 }
 
 
