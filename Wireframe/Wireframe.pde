@@ -20,7 +20,12 @@ Cube cube;
 Plane plane;
 TriangleMesh mesh;
 
-
+WireMesh ball;
+float[] ballPoint={0.3, 0.2, 0, 0.2, 0.3, 0, -0.2, 0.3, 0, -0.3, 0.2, 0, -0.2, 0.1, 0, -0.1, 0.1, 0, -0.1, -0.1, 0, -0.2, -0.1, 0,
+                   -0.3, -0.2, 0, -0.2, -0.3, 0, 0.2, -0.3, 0, 0.3, -0.2, 0, 0.3, 0.2, 0,
+                   0.3, 0.2, 0.1, 0.2, 0.3, 0.1, -0.2, 0.3, 0.1, -0.3, 0.2, 0.1,
+                   -0.3, -0.2, 0.1, -0.2, -0.3, 0.1, 0.2, -0.3, 0.1, 0.3, -0.2, 0.1, 0.3, 0.2, 0.1};
+                   
 
 
 
@@ -32,14 +37,16 @@ void setup(){
 
   cube = new Cube(new Position(6,0,0),2);
   plane = new Plane(0,0,-1);
+  ball = new WireMesh(ballPoint);
   
  // mesh = new TriangleMesh();
+  ball.move(new Position(1,0,1));
   
   
-  
-  graphs = new Graphic[2];
+  graphs = new Graphic[3];
   graphs[0]=cube;
   graphs[1]=plane;
+  graphs[2]=ball;
   
   
 
@@ -50,8 +57,8 @@ void setup(){
 void draw(){
   
   if(mousePressed){
-    rotationX+=(pmouseX-mouseX)*4*fov/screenX;
-    
+    rotationZ+=(pmouseX-mouseX)*4*fov/screenX;
+    rotationY-=(pmouseY-mouseY)*4*fov/screenY;
   }
   
   if(keyPressed){
