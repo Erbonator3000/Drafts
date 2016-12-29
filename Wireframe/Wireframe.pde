@@ -1,5 +1,5 @@
 
-final static int screenX = 480;
+final static int screenX = 600;
 final static int screenY = 480;
 
 Position camPosition;
@@ -10,6 +10,10 @@ float rotationZ = 0;
 
 float fov = 3*PI/8;
 float speed = 0.1;
+
+float speedX=0;
+float speedY=0;
+float speedZ=0;
 
 Position[] points = new Position[1];
 
@@ -32,7 +36,7 @@ float[] ballPoint={0.3, 0.2, 0, 0.2, 0.3, 0, -0.2, 0.3, 0, -0.3, 0.2, 0, -0.2, 0
 void setup(){
   camPosition = new Position(0, 0, 0);
   points[0] = new Position(1,0, 0);
-  size(480, 480);
+  size(600, 480);
   noSmooth();
 
   cube = new Cube(new Position(6,0,0),2);
@@ -40,7 +44,7 @@ void setup(){
   ball = new WireMesh(ballPoint);
   
  // mesh = new TriangleMesh();
-  ball.move(new Position(1,0,1));
+ // ball.move(new Position(1,0,1));
   
   
   graphs = new Graphic[3];
@@ -56,15 +60,16 @@ void setup(){
 
 void draw(){
   
-  if(mousePressed){
-    rotationZ+=(pmouseX-mouseX)*4*fov/screenX;
+  //if(mousePressed){
+    rotationZ+=(pmouseX-mouseX)*4*fov/screenX*4;
     rotationY-=(pmouseY-mouseY)*4*fov/screenY;
-  }
+  //}
   
   if(keyPressed){
-    switch(key){
+    switch(key){  
+
       //walking
-    case  'w': camPosition.move(speed*cos(rotationZ), speed*sin(rotationZ),0); break;
+   /* case  'w': camPosition.move(speed*cos(rotationZ), speed*sin(rotationZ),0); break;
     case  's': camPosition.move(-speed*cos(rotationZ), -speed*sin(rotationZ),0); break;
     case  'a': camPosition.move(-speed*sin(rotationZ), speed*cos(rotationZ),0); break;
     case  'd': camPosition.move(speed*sin(rotationZ), -speed*cos(rotationZ),0); break;  
@@ -75,7 +80,7 @@ void draw(){
     case  'h': camPosition.move(speed*sin(rotationZ)*cos(rotationY), -speed*cos(rotationZ)*cos(rotationX),-speed*cos(rotationY)*sin(rotationX));break;
     case  'b': camPosition.move(speed*sin(rotationY)*cos(rotationZ),speed*sin(-rotationX)*cos(rotationZ), speed*cos(rotationX)*cos(rotationY)); break;
     case  'n': camPosition.move(-speed*sin(rotationY)*cos(rotationZ), -speed*sin(-rotationX)*cos(rotationZ), -speed*cos(rotationX)*cos(rotationY)); break;
-      //camera rotation
+   */   //camera rotation
     case  'u':rotationX+=speed; break;
     case  'o':rotationX-=speed; break;
     case  'i':rotationY+=speed; break;
@@ -88,6 +93,7 @@ void draw(){
     }
     print(" x:"+camPosition.x+ " y: "+ camPosition.y+ " z: "+camPosition.z + "\n");
   }
+  camMove(speedX, speedY, speedZ);
   
   while(rotationX>=2*PI) rotationX-=2*PI;
   while(rotationX<0) rotationX+=2*PI;
@@ -118,6 +124,31 @@ void draw(){
       }
     }
   }
+}
+
+void keyPressed(){
+  switch(key){
+  case 'w': speedX=speed; break;
+  case 's': speedX=-speed; break;
+  case 'a': speedY=speed; break;
+  case 'd': speedY=-speed; break;
+  }
+}
+void keyReleased(){
+  switch(key){
+  case 'w': speedX=0; break;
+  case 's': speedX=0; break;
+  case 'a': speedY=0; break;
+  case 'd': speedY=0; break;
+  }
+}
+
+
+void camMove(float speedx, float speedy, float speedz){
+  camPosition.move(speedx*cos(rotationZ), speedx*sin(rotationZ),0);//speedx*sin(-rotationY)*cos(rotationX));
+  camPosition.move(-speedy*sin(rotationZ), speedy*cos(rotationZ),0);//speedy*cos(rotationY)*sin(rotationX));
+  camPosition.move(speedz*sin(rotationY)*cos(rotationZ),speedz*sin(-rotationX)*cos(rotationZ), speedz*cos(rotationX)*cos(rotationY));
+
 }
 
 
