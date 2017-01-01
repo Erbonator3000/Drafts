@@ -14,14 +14,14 @@ float speedY=0;
 
 float speed=1;
 
-Pixel[] pixels= new Pixel[10];
+Pixel[] clients = new Pixel[10];
 
 void setup(){
   
   server= new Server(this, port);
   
   size(480, 480);
-  myPixel= new Pixel(0x0000FF);
+  myPixel= new Pixel(0xFFFFFF);
   myPixel.X=screenX/2;
   myPixel.Y=screenY/2;
 }
@@ -41,6 +41,12 @@ void draw(){
   
   stroke(myPixel.pixelColor);
   point(myPixel.X, myPixel.Y);
+  
+
+    
+  
+
+  
 }
 
 
