@@ -1,5 +1,5 @@
 import processing.net.*;
-
+/*
 Server server;
 
 int port=5000;
@@ -66,4 +66,4 @@ void keyReleased(){
     case 'a': speedX=0; break;
     case 'd': speedX=0; break;
   }
-}
+}*/

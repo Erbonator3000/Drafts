@@ -15,7 +15,7 @@ void setup() {
   satellites[0].y=240;
   satellites[0].x=240;
   satellites[0].stationary=true;
-  satellites[0].mass=1000;
+  satellites[0].mass=10000;
   satellites[0].radius=50;
   
 }
